@@ -3,13 +3,13 @@ if (-not ([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdent
     exit
 }
 
-$protocolName = 'reno'
-$regBase = "HKCU:\Software\Classes\$protocolName"
-$taskName = "Reno"
+$projectName = 'Reno'
+$protocolName = $projectName.ToLower()
+$registryPath = "HKCU:\Software\Classes\$protocolName"
 
-if (Test-Path $regBase) {
+if (Test-Path $registryPath) {
     try {
-        Remove-Item -Path $regBase -Recurse -Force
+        Remove-Item -Path $registryPath -Recurse -Force
         Write-Host "Protocol handler '${protocolName}://' has been removed successfully."
     }
     catch {
@@ -21,10 +21,10 @@ else {
     Write-Host "No protocol handler for '${protocolName}://' was found. Nothing to remove."
 }
 
-if (Get-ScheduledTask -TaskName $taskName -ErrorAction SilentlyContinue) {
+if (Get-ScheduledTask -TaskName $projectName -ErrorAction SilentlyContinue) {
     try {
-        Unregister-ScheduledTask -TaskName $taskName -Confirm:$false
-        Write-Host "Scheduled task '$taskName' removed."
+        Unregister-ScheduledTask -TaskName $projectName -Confirm:$false
+        Write-Host "Scheduled task '$projectName' removed."
     }
     catch {
         Write-Error "Failed to remove scheduled task: $_"
@@ -32,5 +32,5 @@ if (Get-ScheduledTask -TaskName $taskName -ErrorAction SilentlyContinue) {
     }
 }
 else {
-    Write-Host "No scheduled task named '$taskName' was found. Nothing to remove."
+    Write-Host "No scheduled task named '$projectName' was found. Nothing to remove."
 }
