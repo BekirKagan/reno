@@ -2,6 +2,7 @@
 
 $projectName = 'Reno'
 $protocolName = $projectName.ToLower()
+$logoPath = Join-Path $PSScriptRoot "$($projectName.ToLower())-logo.png"
 
 try {
     $wingetOutput = winget upgrade --include-unknown
@@ -13,7 +14,7 @@ catch {
 
 $columnsLine = $wingetOutput | Select-String -Pattern '^Name\s+Id\s+Version'
 if (-not $columnsLine) {
-    New-BurntToastNotification -Text 'All packages are up to date.'
+    New-BurntToastNotification -Text 'All packages are up to date.' -AppLogo $logoPath
     exit 0
 }
 
@@ -31,7 +32,7 @@ $updates = foreach ($line in $updatesLine) {
 }
 
 if (-not $updates -or $updates.Count -eq 0) {
-    New-BurntToastNotification -Text 'All packages are up to date.'
+    New-BurntToastNotification -Text 'All packages are up to date.' -AppLogo $logoPath
     exit 0
 }
 
@@ -41,4 +42,5 @@ $notificationButton = New-BTButton -Content 'Update' -Arguments "${protocolName}
 
 New-BurntToastNotification `
     -Text $notificationTitle, $notificationText `
-    -Button $notificationButton
+    -Button $notificationButton `
+    -AppLogo $logoPath
