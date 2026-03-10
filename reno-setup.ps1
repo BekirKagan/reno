@@ -25,15 +25,15 @@ if (-not (Test-Path $renoPath)) {
     Write-Error "$($projectName.ToLower()).ps1 not found at '$renoPath'. Make sure all scripts are in the same folder."
     exit 1
 }
-    
+
 if (-not (Test-Path $renoUpdatePath)) {
     Write-Error "$($projectName.ToLower())-update.ps1 not found at '$renoUpdatePath'. Make sure all scripts are in the same folder."
     exit 1
 }
 
 # Registry
-$command = "`"$pwshPath`" -WindowStyle Hidden -File `"$renoUpdatePath`""
-$commandPath = "$registryPath\shell\open\command" 
+$command = "`"$pwshPath`" -File `"$renoUpdatePath`""
+$commandPath = "$registryPath\shell\open\command"
 
 $existingCommand = if (Test-Path $commandPath) {
     (Get-ItemProperty -Path $commandPath -Name '(Default)' -ErrorAction SilentlyContinue).'(Default)'
