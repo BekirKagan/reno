@@ -4,8 +4,8 @@ $projectName = 'Reno'
 $logoPath = Join-Path $PSScriptRoot "$($projectName.ToLower())-logo.png"
 
 try {
-    winget upgrade --all --include-unknown | Tee-Object -Variable output
-    $failed = $output | Select-String -Pattern 'failed' -Quiet
+    winget upgrade --all --include-unknown --accept-package-agreements --accept-source-agreements --authentication-mode silent
+    $failed = $LASTEXITCODE -ne 0
     if ($failed) {
         New-BurntToastNotification `
             -Text $projectName, 'Some updates failed. Check the winget logs for details.' `
